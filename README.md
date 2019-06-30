@@ -1,9 +1,5 @@
 # react-website
 
-[![npm version](https://img.shields.io/npm/v/react-website.svg?style=flat-square)](https://www.npmjs.com/package/react-website)
-[![npm downloads](https://img.shields.io/npm/dm/react-isomorphic-render.svg?style=flat-square)](https://www.npmjs.com/package/react-website)
-[![npm downloads](https://img.shields.io/npm/dm/react-website.svg?style=flat-square)](https://www.npmjs.com/package/react-website)
-
 A complete solution for building a React/Redux application
 
 * Routing
@@ -17,10 +13,6 @@ A complete solution for building a React/Redux application
 * HTTP Cookies
 * etc
 
-# 2.x
-
-These are the docs for the latest version `3.x`. For version `2.x` (legacy projects) docs see the [README of the `2.x` branch](https://github.com/catamphetamine/react-website/tree/2.x).
-
 # Introduction
 
 ## Getting started
@@ -30,8 +22,6 @@ First, install Redux:
 ```bash
 $ npm install redux react-redux@5 --save
 ```
-
-> Note: `react-redux@6` is incompatible with `found@0.3` and won't work [#69](https://github.com/catamphetamine/react-website/issues/69)
 
 Then, install `react-website`:
 
@@ -212,34 +202,10 @@ webpack-dev-server --hot --config webpack.config.js
 </details>
 
 ####
-
-See the [Webpack example project](https://github.com/catamphetamine/react-website-webpack-example).
-
-If you're using [Parcel](https://parceljs.org/) then it's much simpler than Webpack: see the [basic example project](https://github.com/catamphetamine/react-website-basic-example) for the setup required in order to generate and serve `index.html` and `bundle.js` files over HTTP on `localhost:1234`.
-
-So now the website should be fully working.
-
 The website (`index.html`, `bundle.js`, CSS stylesheets and images, etc) can now be deployed as-is in a cloud (e.g. on Amazon S3) and served statically for a very low price. The API can be hosted "serverlessly" in a cloud (e.g. Amazon Lambda) which is also considered cheap. No running Node.js server is required. Yes, it's not a Server-Side Rendered approach because a user is given a blank page first, then `bundle.js` script is loaded by the web browser, then `bundle.js` script is executed fetching some data from the API via an HTTP request, and only when that HTTP request comes back — only then the page is rendered (in the browser). Google won't index such websites, but if searchability is not a requirement (at all or yet) then that would be the way to go (e.g. startup "MVP"s or "internal applications"). Server-Side Rendering can be easily added to such setup should the need arise.
 
 ## Server Side Rendering
 
-<!--
-### Search engines
-
-Search engine crawlers like Google bot won't wait for a page to make its asynchronous HTTP calls to an API server for data: they would simply abort all **asynchronous** javascript and index the page as is. Don't mistake it for web crawlers not being able to execute javascript — they're [perfectly fine](http://andrewhfarmer.com/react-seo/) with doing that ([watch out though](https://blog.codaxy.com/debugging-googlebot-crawl-errors-for-javascript-applications-5d9134c06ee7) for using the latest javascript language features and always use polyfills for the older browsers since web crawlers may be using those under the hood).
-
-So the only thing preventing a dynamic website from being indexed by a crawler is asynchronous HTTP queries for data, not javascript itself. This therefore brings two solutions: one is to perform everything (routing, data fetching, rendering) on the server side and the other is to perform routing and data fetching on the server side leaving rendering to the client's web browser. Both these approaches work with web crawlers. And this is what this library provides.
-
-While the first approach is more elegant and pure, while also delivering the fastest "time to first byte", currently it is a CPU intensive task to render a complex React page (takes about 30 milliseconds of blocking CPU single core time for complex pages having more than 1000 components, as of 2017). Therefore one may prefer the second approach: performing routing and page preloading on the server side while leaving page rendering to the client. This means that the user won't see any content until the javascript bundle is downloaded (which takes some time, especially with large applications not using "code splitting"), but it also means that the server's CPU is freed from rendering React. This mode is activated by passing `renderContent: false` flag to the rendering server.
-
-### Page loading time
-
-Another argument in favour of Server-Side Rendering is that even if a website doesn't need search engine indexing it could still benefit from saving that additional asynchronous HTTP roundtrip from the web browser to the API server for fetching the page's data. And no matter how fast the API server is, [latency is unbeatable](https://www.igvita.com/2012/07/19/latency-the-new-web-performance-bottleneck/) being about 100ms. So, by performing routing and page preloading on the server side one can speed up website loading by about 100ms.
-
-### Adding server-side rendering
-
-Not everyone needs server-side rendering for their apps. E.g. if search engine indexing is not a priority, or if a website is a "static" one, like a "promosite" or a "personal portfolio" (just build it with a bundler and host it as a bunch of files in a cloud).
--->
 Adding server-side rendering to the setup is quite simple though requiring a Node.js process running which increases hosting costs and maintenance complexity.
 
 In case of server-side rendering `index.html` is being generated on-the-fly by page rendering server for each incoming HTTP request, so the `index.html` file may be deleted as it's of no use now.
@@ -259,7 +225,7 @@ const server = webpageServer(settings, {
   // as <script src="..."/> and <link rel="style" href="..."/>.
   // (this is for the main application JS and CSS bundles only,
   //  for injecting 3rd party JS and CSS use `html` settings instead:
-  //  https://github.com/catamphetamine/react-website/blob/master/README-ADVANCED.md#all-webpage-rendering-server-options)
+  README-ADVANCED.md#all-webpage-rendering-server-options)
   assets() {
     return {
       // Assuming that it's being tested on a local computer first
@@ -294,10 +260,6 @@ Now [disable javascript in Chrome DevTools](http://stackoverflow.com/questions/1
 ## Conclusion
 
 This concludes the introductory part of the README and the rest is the description of the various tools and techniques which come prepackaged with this library.
-
-A working example illustrating Server-Side Rendering and all other things can be found here: [webpack-react-redux-isomorphic-render-example](https://github.com/catamphetamine/webpack-react-redux-isomorphic-render-example).
-
-A much simpler and smaller example (using Parcel instead of Webpack) can be found here: [react-website-basic-example](https://github.com/catamphetamine/react-website-basic-example).
 
 # Documentation
 
@@ -531,11 +493,6 @@ The possible `options` (the third argument of all `http` methods) are
   * `authentication` — Set to `false` to disable sending the authentication token as part of the HTTP request. Set to a String to pass it as an `Authorization: Bearer ${token}` token (no need to supply the token explicitly for every `http` method call, it is supposed to be set globally, see below).
   * `progress(percent, event)` — Use for tracking HTTP request progress (e.g. file upload).
   * `onResponseHeaders(headers)` – Use for examining HTTP response headers (e.g. [Amazon S3](http://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectPUT.html#RESTObjectPUT-responses-response-headers) file upload).
-
-<!--
-  (removed)
-  * `onRequest(request)` – for capturing `superagent` request (there was [a feature request](https://github.com/catamphetamine/react-website/issues/46) to provide a way for aborting running HTTP requests via `request.abort()`)
--->
 
 <!--
 `http` utility is also available from anywhere on the client side via an exported `getHttpClient()` function (e.g. for bootstrapping).
@@ -883,7 +840,7 @@ In order for `http` utility to send an authentication token as part of an HTTP r
 
 #####
 
-The `accessToken` is initially obtained when a user signs in: the web browser sends HTTP POST request to `/sign-in` API endpoint with `{ email, password }` parameters and gets `{ userInfo, accessToken }` as a response, which is then stored in `localStorage` (or in Redux `state`, or in a `cookie`) and all subsequent HTTP requests use that `accessToken` to call the API endpoints. The `accessToken` itself is usually a [JSON Web Token](https://jwt.io/introduction/) signed on the server side and holding the list of the user's priviliges ("roles"). Hence authentication and authorization are completely covered. [Refresh tokens](https://auth0.com/blog/refresh-tokens-what-are-they-and-when-to-use-them/) are also [supported](https://github.com/catamphetamine/react-website/blob/master/README-ADVANCED.md#all-react-websitejs-settings).
+The `accessToken` is initially obtained when a user signs in: the web browser sends HTTP POST request to `/sign-in` API endpoint with `{ email, password }` parameters and gets `{ userInfo, accessToken }` as a response, which is then stored in `localStorage` (or in Redux `state`, or in a `cookie`) and all subsequent HTTP requests use that `accessToken` to call the API endpoints. The `accessToken` itself is usually a [JSON Web Token](https://jwt.io/introduction/) signed on the server side and holding the list of the user's priviliges ("roles"). Hence authentication and authorization are completely covered. [Refresh tokens](https://auth0.com/blog/refresh-tokens-what-are-they-and-when-to-use-them/) are also supported.
 
 This kind of an authentication and authorization scheme is self-sufficient and doesn't require "restricting" any routes: if a route's `@preload()` uses `http` utility for querying an API endpoint then this API endpoint must check if the user is signed in and if the user has the necessary priviliges. If yes then the route is displayed. If not then the user is redirected to either a "Sign In Required" page or "Access Denied" page.
 
@@ -1206,9 +1163,6 @@ export default class Course extends Component {
 
 In this example `loadCourseInfo()` will be executed while snapshotting and therefore course info will be present on the snapshotted page. But course price won't be present on the snapshotted page because it's being loaded inside `@preload(..., { client: true })` which only gets called in a user's web browser. When a user opens the course page in his web browser it will show the snapshotted page with course info with a "loading" spinner on top of it as it is loading the course price. After the course price has been loaded the "loading" spinner disappears and the user sees the fully rendered course page.
 
-<!--
-The "client-side-only" `@preload()`s have a catch though: for [technical reasons](https://github.com/catamphetamine/react-website/blob/master/source/redux/client/client.js#L15) they aren't executed when the application is first rendered in a web browser. After the initial page load, the application is first rendered without resolving "client-side-only" `@preload()`s and only after this "first rendering pass" finishes does it resolve all "client-side-only" `@preload()`s and re-renders itself. This limitation is inherent to how React server-side rendering works. It can be simplified for cases where `index.html` approach is used, and this workaround will probably get implemented in some future version.
--->
 </details>
 
 ## Page HTTP response status code
@@ -1406,7 +1360,7 @@ class Page extends Component {
 }
 ```
 
-If someone prefers interacting with [`found`](https://github.com/4Catalyzer/found) `router` directly instead then it is available on all pages as a `router` property, or via [`@withRouter`](https://github.com/4Catalyzer/found#programmatic-navigation) decorator.
+If someone prefers interacting with found router directly instead then it is available on all pages as a `router` property, or via @withRouter decorator.
 
 ```js
 import React from 'react'
@@ -1739,15 +1693,14 @@ function reducer(state, action) {
 
 ## Server-Side Rendering and bundlers
 
-If the application is being built with a bundler (most likely Webpack) and Server-Side Rendering is enabled then make sure to build the server-side code with the bundler too so that `require()` calls for assets (images, styles, fonts, etc) inside React components don't break (see [universal-webpack](https://github.com/catamphetamine/universal-webpack), for example).
-
+If the application is being built with a bundler (most likely Webpack) and Server-Side Rendering is enabled then make sure to build the server-side code with the bundler too so that `require()` calls for assets (images, styles, fonts, etc) inside React components don't break.
 ## Code splitting
 
-Code splitting is supported. See [README-CODE-SPLITTING](https://github.com/catamphetamine/react-website/blob/master/README-CODE-SPLITTING.md)
+Code splitting is supported.
 
 ## Advanced
 
-At some point in time this README became huge so I extracted some less relevant parts of it into [README-ADVANCED](https://github.com/catamphetamine/react-website/blob/master/README-ADVANCED.md) (including the list of all possible settings and options). If you're a first timer then just skip that one - you don't need it for sure.
+At some point in time this README became huge so I extracted some less relevant parts of it into README-ADVANCED (including the list of all possible settings and options). If you're a first timer then just skip that one - you don't need it for sure.
 
 ## License
 
